@@ -44,7 +44,7 @@ const Game: React.FC = () => {
       'Go to move #' + move :
       'Go to game start';
     return (
-      <li key={move}>
+      <li className={(stepNumber === move) ? "red-text" : ""} key={move}>
         <button onClick={() => jumpTo(move)}>{desc}</button>
       </li>
     );
