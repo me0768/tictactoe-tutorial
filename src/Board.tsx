@@ -1,40 +1,24 @@
-import * as React from 'react';
-import Square from './Square';
-import { CellValue } from './CellValue';
+import * as React from "react";
+import { CellValue } from "./CellValue";
+import BoardRow from "./BoardRow";
 
-interface Props{
-  squares: CellValue[],
-  onClick(i: number): void
+interface Props {
+  squares: CellValue[];
+  onClick(i: number): void;
 }
 
-const Board: React.FC<Props> = ({squares, onClick}) => {
-
-  const renderSquare = React.useCallback((i: number) =>
-    <Square
-      value={squares[i]}
-      onClick={() => onClick(i)}
-    />
-  , [onClick, squares]);
-
-  return (
-    <div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-    </div>
+const Board: React.FC<Props> = ({ squares, onClick }) => {
+  const renderBoardRow = (rowNum: number) => (
+    <BoardRow squares={squares} onClick={onClick} rowNum={rowNum} />
   );
-}
+
+  let boardRows = [];
+  const NUM_OF_ROWS: number = 3;
+  for (let i = 0; i < NUM_OF_ROWS; i++) {
+    boardRows.push(renderBoardRow(i));
+  }
+
+  return <div>{boardRows}</div>;
+};
 
 export default Board;
