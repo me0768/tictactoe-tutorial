@@ -17,7 +17,7 @@ const BoardRow: React.FC<Props> = ({ squares, onClick, rowNum }) => {
   let renderSquares = [];
   const NUM_OF_SQUARES: number = 3;
   for (let i = 0; i < NUM_OF_SQUARES; i++) {
-    renderSquares.push(renderSquare(i * rowNum));
+    renderSquares.push(renderSquare((NUM_OF_SQUARES * rowNum) + i));
   }
 
   return <div className="board-row">{renderSquares}</div>;
