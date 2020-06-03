@@ -13,9 +13,13 @@ const Game: React.FC = () => {
   const current = history[stepNumber];
   const [xIsNext, setXIsNext] = React.useState(true);
   const winner = calculateWinner(current.squares);
+  const filledAllWithoutWinner = () => !current.squares.includes(null);
+  
   let status;
   if (winner) {
     status = "Winner: " + winner;
+  } else if (filledAllWithoutWinner()) {
+    status = "Draw!!";
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -40,12 +44,12 @@ const Game: React.FC = () => {
   }, []);
 
   const moves = history.map((step, move) => {
-    const desc = move ?
+    const description = move ?
       'Go to move #' + move :
       'Go to game start';
     return (
       <li className={(stepNumber === move) ? "red-text" : ""} key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
+        <button onClick={() => jumpTo(move)}>{description}</button>
       </li>
     );
   });
@@ -80,6 +84,9 @@ function calculateWinner(squares: CellValue[]) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      console.log(squares);
+      console.log(squares[a]);
+      console.log(squares[b]);
       return squares[a];
     }
   }

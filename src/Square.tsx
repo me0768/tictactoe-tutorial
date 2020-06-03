@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CellValue } from './CellValue';
 
 interface SquareProps {
-  value: CellValue 
+  value: CellValue
   onClick(): void
 }
 
