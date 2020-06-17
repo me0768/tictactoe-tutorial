@@ -9,6 +9,7 @@ const Game: React.FC = () => {
     squares: Array(9).fill(null)
   }]);
   const [stepNumber, setStepNumber] = React.useState(0);
+  const [moveAsc, setMoveAsc] = React.useState(true);
 
   const current = history[stepNumber];
   const [xIsNext, setXIsNext] = React.useState(true);
@@ -40,6 +41,10 @@ const Game: React.FC = () => {
     setXIsNext(!xIsNext);
   }, [current.squares, stepNumber, history, xIsNext]);
 
+  const reverseMoves = React.useCallback(() => {
+    setMoveAsc(!moveAsc);
+  }, [moveAsc]);
+
   const jumpTo = React.useCallback((step: number) => {
     setStepNumber(step)
     setXIsNext(step % 2 === 0);
@@ -66,8 +71,9 @@ const Game: React.FC = () => {
           />
         </div>
         <div className="game-info">
+          <button onClick={() => reverseMoves()}>Move history upside down!</button>
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <ol>{moveAsc ? moves : moves.reverse()}</ol>
         </div>
       </div>
   )
