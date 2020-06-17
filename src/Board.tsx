@@ -4,12 +4,13 @@ import BoardRow from "./BoardRow";
 
 interface Props {
   squares: CellValue[];
+  winning: number[];
   onClick(i: number): void;
 }
 
-const Board: React.FC<Props> = ({ squares, onClick }) => {
+const Board: React.FC<Props> = ({ squares, winning, onClick }) => {
   const renderBoardRow = (rowNum: number) => (
-    <BoardRow squares={squares} onClick={onClick} rowNum={rowNum} />
+    <BoardRow key={rowNum} squares={squares} onClick={onClick} winning={winning} rowNum={rowNum} />
   );
 
   let boardRows = [];

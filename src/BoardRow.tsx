@@ -4,14 +4,15 @@ import { CellValue } from "./CellValue";
 
 interface Props {
   squares: CellValue[];
+  winning: number[];
   onClick(i: number): void;
   rowNum: number;
 }
 
-const BoardRow: React.FC<Props> = ({ squares, onClick, rowNum }) => {
+const BoardRow: React.FC<Props> = ({ squares, winning, onClick, rowNum }) => {
   const renderSquare = React.useCallback(
-    (i: number) => <Square value={squares[i]} onClick={() => onClick(i)} />,
-    [onClick, squares]
+    (i: number) => <Square key={i} colored={winning.includes(i)} value={squares[i]} onClick={() => onClick(i)} />,
+    [onClick, squares, winning]
   );
 
   let renderSquares = [];

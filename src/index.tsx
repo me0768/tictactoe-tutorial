@@ -12,7 +12,9 @@ const Game: React.FC = () => {
 
   const current = history[stepNumber];
   const [xIsNext, setXIsNext] = React.useState(true);
-  const winner = calculateWinner(current.squares);
+  const winnerInfo = calculateWinner(current.squares);
+  const winner = winnerInfo && winnerInfo.winner ? winnerInfo.winner : null;
+  const winningLine = winnerInfo && winnerInfo.winningLine ? winnerInfo.winningLine : [];
   const filledAllWithoutWinner = () => !current.squares.includes(null);
   
   let status;
@@ -59,6 +61,7 @@ const Game: React.FC = () => {
         <div className="game-board">
           <Board
             squares={current.squares}
+            winning={winningLine}
             onClick={i => handleClick(i)}
           />
         </div>
@@ -87,7 +90,10 @@ function calculateWinner(squares: CellValue[]) {
       console.log(squares);
       console.log(squares[a]);
       console.log(squares[b]);
-      return squares[a];
+      return {
+        winner: squares[a],
+        winningLine: lines[i]
+      }
     }
   }
   return null;
