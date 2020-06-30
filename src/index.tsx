@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Board from './Board';
+import Board, { NUM_OF_ROWS } from './Board';
 import { CellValue } from './CellValue';
 
 const Game: React.FC = () => {
   const [history, setHistory] = React.useState([{
-    squares: Array(9).fill(null)
+    squares: Array(9).fill(null),
+    clickedSquare: {row: -1, col: -1}
   }]);
   const [stepNumber, setStepNumber] = React.useState(0);
   const [moveAsc, setMoveAsc] = React.useState(true);
@@ -27,16 +28,16 @@ const Game: React.FC = () => {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
-  const handleClick = React.useCallback((i: number) => {
+  const handleClick = React.useCallback((col: number, row: number) => {
     const updatedHistory = history.slice(0, stepNumber + 1);
     const updatedSquares = current.squares.slice();
 
-    if (calculateWinner(current.squares) || current.squares[i]) {
+    if (calculateWinner(current.squares) || current.squares[row * NUM_OF_ROWS + col]) {
       return;
     }
 
-    updatedSquares[i] = xIsNext ? "X" : "O";
-    setHistory(updatedHistory.concat([{squares:updatedSquares}]));
+    updatedSquares[row * NUM_OF_ROWS + col] = xIsNext ? "X" : "O";
+    setHistory(updatedHistory.concat([{squares: updatedSquares, clickedSquare: {row, col}}]));
     setStepNumber(history.length);
     setXIsNext(!xIsNext);
   }, [current.squares, stepNumber, history, xIsNext]);
@@ -52,7 +53,7 @@ const Game: React.FC = () => {
 
   const moves = history.map((step, move) => {
     const description = move ?
-      'Go to move #' + move :
+      `Go to move # ${move} (${step.clickedSquare.row}, ${step.clickedSquare.col})` :
       'Go to game start';
     return (
       <li className={(stepNumber === move) ? "red-text" : ""} key={move}>
@@ -63,19 +64,19 @@ const Game: React.FC = () => {
 
   return (
     <div className="game">
-        <div className="game-board">
-          <Board
-            squares={current.squares}
-            winning={winningLine}
-            onClick={i => handleClick(i)}
-          />
-        </div>
-        <div className="game-info">
-          <button onClick={() => reverseMoves()}>Move history upside down!</button>
-          <div>{status}</div>
-          <ol>{moveAsc ? moves : moves.reverse()}</ol>
-        </div>
+      <div className="game-board">
+        <Board
+          squares={current.squares}
+          winning={winningLine}
+          onClick={(i, j) => handleClick(i,j)}
+        />
       </div>
+      <div className="game-info">
+        <button onClick={() => reverseMoves()}>Move history upside down!</button>
+        <div>{status}</div>
+        <ol>{moveAsc ? moves : moves.reverse()}</ol>
+      </div>
+    </div>
   )
 }
 
@@ -93,9 +94,6 @@ function calculateWinner(squares: CellValue[]) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      console.log(squares);
-      console.log(squares[a]);
-      console.log(squares[b]);
       return {
         winner: squares[a],
         winningLine: lines[i]

@@ -1,24 +1,29 @@
 import * as React from "react";
 import Square from "./Square";
 import { CellValue } from "./CellValue";
+import { NUM_OF_ROWS } from "./Board";
 
 interface Props {
   squares: CellValue[];
   winning: number[];
-  onClick(i: number): void;
+  onClick(i: number, j: number): void;
   rowNum: number;
 }
 
 const BoardRow: React.FC<Props> = ({ squares, winning, onClick, rowNum }) => {
   const renderSquare = React.useCallback(
-    (i: number) => <Square key={i} colored={winning.includes(i)} value={squares[i]} onClick={() => onClick(i)} />,
+    (i: number, j: number) => <Square
+      key={(NUM_OF_SQUARES * j) + i}
+      colored={winning.includes(j * NUM_OF_ROWS + i)}
+      value={squares[j * NUM_OF_ROWS + i]}
+      onClick={() => onClick(i, j)} />,
     [onClick, squares, winning]
   );
 
   let renderSquares = [];
   const NUM_OF_SQUARES: number = 3;
   for (let i = 0; i < NUM_OF_SQUARES; i++) {
-    renderSquares.push(renderSquare((NUM_OF_SQUARES * rowNum) + i));
+    renderSquares.push(renderSquare(i, rowNum));
   }
 
   return <div className="board-row">{renderSquares}</div>;

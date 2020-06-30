@@ -5,8 +5,10 @@ import BoardRow from "./BoardRow";
 interface Props {
   squares: CellValue[];
   winning: number[];
-  onClick(i: number): void;
+  onClick(i: number, j: number): void;
 }
+
+export const NUM_OF_ROWS: number = 3;
 
 const Board: React.FC<Props> = ({ squares, winning, onClick }) => {
   const renderBoardRow = (rowNum: number) => (
@@ -14,7 +16,6 @@ const Board: React.FC<Props> = ({ squares, winning, onClick }) => {
   );
 
   let boardRows = [];
-  const NUM_OF_ROWS: number = 3;
   for (let i = 0; i < NUM_OF_ROWS; i++) {
     boardRows.push(renderBoardRow(i));
   }
